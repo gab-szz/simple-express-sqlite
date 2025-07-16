@@ -1,4 +1,5 @@
 import express, { Request, Response, Express } from "express";
+import autorRoutes from "@/routes/autorRoutes";
 
 const routes = (app: Express) => {
   app.use(express.json());
@@ -6,6 +7,8 @@ const routes = (app: Express) => {
   app.route("/").get((req: Request, res: Response) => {
     res.status(200).json({ mensagem: "API de Livros e Autores!" });
   });
+
+  app.use("/autores", autorRoutes);
 };
 
 export default routes;
