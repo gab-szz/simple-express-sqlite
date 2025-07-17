@@ -10,7 +10,7 @@ const controller = new AutorController(service);
 
 const router = Router();
 
-router.get("/", controller.listar);
+router.get("/", controller.filtrar);
 router.get("/:id", controller.buscar);
 router.post("/", controller.criar);
 router.put("/:id", controller.atualizar);

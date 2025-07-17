@@ -1,15 +1,33 @@
 import { Request, Response, NextFunction } from "express";
-import { AutorService } from "@/services/autorServiceInterface";
+import { IAutorService } from "@/services/autorServiceInterface";
 import { AppError } from "@/errors/AppError";
 
 export class AutorController {
-  constructor(private autorService: AutorService) {}
+  constructor(private autorService: IAutorService) {}
 
   listar = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const autores = await this.autorService.listar();
       res.json(autores);
     } catch (error: unknown) {
+      next(error);
+    }
+  };
+
+  filtrar = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { nome } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const resultado = await this.autorService.filtrar(
+        { nome: nome as string },
+        page,
+        limit
+      );
+
+      res.json(resultado);
+    } catch (error) {
       next(error);
     }
   };

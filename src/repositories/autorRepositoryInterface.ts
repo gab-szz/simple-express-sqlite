@@ -1,7 +1,12 @@
 import { IAutor } from "@/types/autor";
 
-export interface AutorRepository {
+export interface IAutorRepository {
   criar(autor: IAutor): Promise<number>;
+  filtrar(
+    filtro: { nome?: string },
+    limit: number,
+    offset: number
+  ): Promise<IAutor[] | null>;
   listarTodos(): Promise<IAutor[]>;
   buscarPorId(id: number): Promise<IAutor | null>;
   atualizar(id: number, autor: IAutor): Promise<void>;

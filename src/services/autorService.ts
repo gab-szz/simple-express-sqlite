@@ -1,13 +1,19 @@
-import { AutorRepository } from "@/repositories/autorRepositoryInterface";
-import { AutorService } from "./autorServiceInterface";
+import { IAutorRepository } from "@/repositories/autorRepositoryInterface";
+import { IAutorService } from "./autorServiceInterface";
 import { IAutor } from "@/types/autor";
 
-export class AutorServiceImpl implements AutorService {
-  constructor(private autorRepository: AutorRepository) {}
+export class AutorServiceImpl implements IAutorService {
+  constructor(private autorRepository: IAutorRepository) {}
 
   async criar(nome: string): Promise<number> {
     const autor: IAutor = { nome };
     return await this.autorRepository.criar(autor);
+  }
+
+  // autorService.ts
+  filtrar(filtro: { nome?: string }, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    return this.autorRepository.filtrar(filtro, limit, offset);
   }
 
   async listar(): Promise<IAutor[]> {
