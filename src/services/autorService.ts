@@ -10,7 +10,6 @@ export class AutorServiceImpl implements IAutorService {
     return await this.autorRepository.criar(autor);
   }
 
-  // autorService.ts
   filtrar(filtro: { nome?: string }, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
     return this.autorRepository.filtrar(filtro, limit, offset);
