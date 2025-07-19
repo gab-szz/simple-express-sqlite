@@ -15,8 +15,9 @@ export class AutorServiceImpl implements IAutorService {
     return this.autorRepository.filtrar(filtro, limit, offset);
   }
 
-  async listar(): Promise<IAutor[]> {
-    return await this.autorRepository.listarTodos();
+  async listar(page: number, limit: number): Promise<IAutor[]> {
+    const offset = (page - 1) * limit;
+    return await this.autorRepository.listarTodos(limit, offset);
   }
 
   async buscar(id: number): Promise<IAutor | null> {
@@ -28,7 +29,7 @@ export class AutorServiceImpl implements IAutorService {
     return await this.autorRepository.atualizar(id, autor);
   }
 
-  async deletar(id: number): Promise<void> {
+  async deletar(id: number): Promise<boolean> {
     return await this.autorRepository.deletar(id);
   }
 }

@@ -39,11 +39,16 @@ export class AutorRepositorySQLite implements IAutorRepository {
     });
   }
 
-  async listarTodos(): Promise<IAutor[]> {
+  async listarTodos(limit: number, offset: number): Promise<IAutor[]> {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM autores`;
+      let query = `SELECT * FROM autores`;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const params: any[] = [];
 
-      db.all(query, [], (err: Error | null, rows: IAutor[] = []) => {
+      query += " LIMIT ? OFFSET ?";
+      params.push(limit, offset);
+
+      db.all(query, params, (err: Error | null, rows: IAutor[] = []) => {
         if (err) return reject(err);
         return resolve(rows);
       });
@@ -73,11 +78,15 @@ export class AutorRepositorySQLite implements IAutorRepository {
     });
   }
 
-  async deletar(id: number): Promise<void> {
+  async deletar(id: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      db.run(`DELETE FROM autores WHERE id = ?`, [id], function (err) {
-        if (err) reject(err);
-        else resolve();
+      const query = `DELETE FROM autores WHERE id = ?`;
+
+      db.run(query, [id], function (err) {
+        if (err) return reject(err);
+
+        // Retorna true se algo foi deletado, false se não
+        resolve(this.changes > 0);
       });
     });
   }
