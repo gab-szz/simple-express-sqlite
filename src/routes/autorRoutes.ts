@@ -19,6 +19,22 @@ const controller = new AutorController(service);
 
 const router = Router();
 
+/**
+ * @swagger
+ * /autores:
+ *   get:
+ *     summary: Lista todos os autores
+ *     tags: [Autores]
+ *     responses:
+ *       200:
+ *         description: Lista de autores
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Autor'
+ */
 router.get("/", validateQuery(AutorQuerySchema), controller.filtrar);
 router.get("/:id", validateParams(AutorIdParamSchema), controller.buscar);
 router.post("/", validateBody(CreateAutorSchema), controller.criar);
