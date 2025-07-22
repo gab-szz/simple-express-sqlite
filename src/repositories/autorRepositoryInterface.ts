@@ -9,6 +9,6 @@ export interface IAutorRepository {
   ): Promise<IAutor[] | null>;
   listarTodos(limit: number, offset: number): Promise<IAutor[]>;
   buscarPorId(id: number): Promise<IAutor | null>;
-  atualizar(id: number, autor: IAutor): Promise<void>;
+  atualizar(id: number, autor: IAutor): Promise<boolean>;
   deletar(id: number): Promise<boolean>;
 }

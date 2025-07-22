@@ -68,12 +68,12 @@ export class AutorRepositorySQLite implements IAutorRepository {
     });
   }
 
-  async atualizar(id: number, autor: IAutor): Promise<void> {
+  async atualizar(id: number, autor: IAutor): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const query = `UPDATE autores SET nome = ? where id = ?`;
       db.run(query, [autor.nome, id], function (err) {
         if (err) reject(err);
-        else resolve();
+        else resolve(this.changes > 0);
       });
     });
   }

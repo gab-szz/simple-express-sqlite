@@ -2,11 +2,11 @@ import { ILivro } from "@/types/livro";
 import { ILivroRepository } from "./livroRepositoryInterface";
 import { db } from "@/lib/sqlite/db";
 
-export class LivroRepository implements ILivroRepository {
+export class LivroRepositorySQLite implements ILivroRepository {
   async criar(livro: ILivro): Promise<number> {
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO livros (titulo, autor_id) VALUES (?, ?)`;
-      db.run(query, [(livro.titulo, livro.autor_id)], function (err) {
+      db.run(query, [livro.titulo, livro.autor_id], function (err) {
         if (err) reject(err);
         else resolve(this.lastID);
       });
@@ -61,21 +61,25 @@ export class LivroRepository implements ILivroRepository {
     });
   }
 
-  async atualizar(livro: ILivro): Promise<void> {
+  async atualizar(livro: ILivro): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const query = `UPDATE livros SET titulo = ? autor_id = ? WHERE id ?`;
-      db.run(query, [livro.id, livro.titulo, livro.autor_id], function (err) {
+      const query = `UPDATE livros SET titulo = ?, autor_id = ? WHERE id = ?`;
+      db.run(query, [livro.titulo, livro.autor_id, livro.id], function (err) {
         if (err) reject(err);
-        else resolve();
+        else resolve(this.changes > 0);
       });
     });
   }
 
-  async deletar(id: number): Promise<void> {
+  async deletar(id: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      db.run(`DELETE FROM livros WHERE id = ?`, [id], function (err) {
-        if (err) reject(err);
-        else resolve();
+      const query = `DELETE FROM livros WHERE id = ?`;
+
+      db.run(query, [id], function (err) {
+        if (err) return reject(err);
+
+        // Retorna true se algo foi deletado, false se não
+        resolve(this.changes > 0);
       });
     });
   }

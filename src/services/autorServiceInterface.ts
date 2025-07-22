@@ -9,6 +9,6 @@ export interface IAutorService {
     limit: number
   ): Promise<IAutor[] | null>;
   buscar(id: number): Promise<IAutor | null>;
-  atualizar(id: number, nome: string): Promise<void>;
+  atualizar(id: number, nome: string): Promise<boolean>;
   deletar(id: number): Promise<boolean>;
 }

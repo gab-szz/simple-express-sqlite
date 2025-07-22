@@ -70,7 +70,12 @@ export class AutorController {
         throw new AppError(400, "Nome é obrigatório.");
       }
 
-      await this.autorService.atualizar(id, nome);
+      const resultado = await this.autorService.atualizar(id, nome);
+
+      if (!resultado) {
+        throw new AppError(404, "Autor não encontrado.");
+      }
+
       res.json({ mensagem: "Autor atualizado com sucesso." });
     } catch (error: unknown) {
       next(error);
@@ -85,6 +90,8 @@ export class AutorController {
       if (!sucesso) {
         return res.status(404).json({ mensagem: "Autor não encontrado." });
       }
+
+      res.json({ mensagem: "Autor deletado com sucesso." });
     } catch (error: unknown) {
       next(error);
     }

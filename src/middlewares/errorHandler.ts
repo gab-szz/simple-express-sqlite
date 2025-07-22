@@ -18,6 +18,18 @@ export function errorHandler(
       .json({ erro: err.message });
   }
 
+  // Tratamento de erros do SQLite
+  if (err instanceof Error && "code" in err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sqliteError = err as any;
+
+    if (sqliteError.code === "SQLITE_CONSTRAINT") {
+      return res.status(400).json({
+        erro: "Dados inválidos. Verifique se todos os campos obrigatórios foram preenchidos corretamente.",
+      });
+    }
+  }
+
   // Se for um erro genérico do JS
   if (err instanceof Error) {
     return res.status(500).type("application/json").json({ erro: err.message });

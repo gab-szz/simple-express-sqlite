@@ -7,6 +7,7 @@ export class LivroServiceImpl implements ILivroService {
 
   async criar(titulo: string, autor_id: number): Promise<number> {
     const livro: ILivro = { titulo, autor_id };
+    console.log(livro);
     return await this.livroRepository.criar(livro);
   }
 
@@ -23,7 +24,7 @@ export class LivroServiceImpl implements ILivroService {
     return await this.livroRepository.buscarPorId(id);
   }
 
-  async atualizar(livro: ILivro): Promise<void> {
+  async atualizar(livro: ILivro): Promise<boolean> {
     if (!livro.id) {
       throw new Error("ID do livro é obrigatório para atualização.");
     }
@@ -31,7 +32,7 @@ export class LivroServiceImpl implements ILivroService {
     return await this.livroRepository.atualizar(livro);
   }
 
-  async deletar(id: number): Promise<void> {
+  async deletar(id: number): Promise<boolean> {
     return await this.livroRepository.deletar(id);
   }
 }

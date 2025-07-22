@@ -8,6 +8,6 @@ export interface ILivroRepository {
     offset: number
   ): Promise<ILivro[]>;
   buscarPorId(id: number): Promise<ILivro | null>;
-  atualizar(livro: ILivro): Promise<void>;
-  deletar(id: number): Promise<void>;
+  atualizar(livro: ILivro): Promise<boolean>;
+  deletar(id: number): Promise<boolean>;
 }

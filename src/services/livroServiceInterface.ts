@@ -8,6 +8,6 @@ export interface ILivroService {
     limit?: number
   ): Promise<ILivro[]>;
   buscar(id: number): Promise<ILivro | null>;
-  atualizar(livro: ILivro): Promise<void>;
-  deletar(id: number): Promise<void>;
+  atualizar(livro: ILivro): Promise<boolean>;
+  deletar(id: number): Promise<boolean>;
 }

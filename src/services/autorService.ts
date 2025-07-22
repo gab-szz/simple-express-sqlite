@@ -24,7 +24,7 @@ export class AutorServiceImpl implements IAutorService {
     return await this.autorRepository.buscarPorId(id);
   }
 
-  async atualizar(id: number, nome: string): Promise<void> {
+  async atualizar(id: number, nome: string): Promise<boolean> {
     const autor: IAutor = { nome };
     return await this.autorRepository.atualizar(id, autor);
   }

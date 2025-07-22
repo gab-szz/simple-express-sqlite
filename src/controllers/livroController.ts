@@ -2,13 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import { ILivroService } from "@/services/livroServiceInterface";
 import { AppError } from "@/errors/AppError";
 import { ILivro } from "@/types/livro";
+import { LivroQuerySchema } from "@/schemas/livro.schema";
 
 export class LivroController {
   constructor(private livroService: ILivroService) {}
 
   listar = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const livros = await this.livroService.filtrar({}, 1, 9999); // simula um "listar todos"
+      const livros = await this.livroService.filtrar({}, 1, 9999);
       res.json(livros);
     } catch (error) {
       next(error);
@@ -17,15 +18,11 @@ export class LivroController {
 
   filtrar = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { titulo } = req.query;
-      const autorId = req.query.autor_id
-        ? parseInt(req.query.autor_id as string)
-        : undefined;
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const query = LivroQuerySchema.parse(req.query);
+      const { nome, autor_id, page = 1, limit = 10 } = query;
 
       const resultado = await this.livroService.filtrar(
-        { titulo: titulo as string, autor_id: autorId },
+        { titulo: nome, autor_id },
         page,
         limit
       );
@@ -55,10 +52,6 @@ export class LivroController {
     try {
       const { titulo, autor_id } = req.body;
 
-      if (!titulo || !autor_id) {
-        throw new AppError(400, "Título e autor_id são obrigatórios.");
-      }
-
       const id = await this.livroService.criar(titulo, autor_id);
       res.status(201).json({ id, titulo, autor_id });
     } catch (error) {
@@ -71,12 +64,12 @@ export class LivroController {
       const id = Number(req.params.id);
       const { titulo, autor_id } = req.body;
 
-      if (!titulo || !autor_id) {
-        throw new AppError(400, "Título e autor_id são obrigatórios.");
-      }
-
       const livro: ILivro = { id, titulo, autor_id };
-      await this.livroService.atualizar(livro);
+      const resultado = await this.livroService.atualizar(livro);
+
+      if (!resultado) {
+        throw new AppError(404, "Livro não encontrado.");
+      }
 
       res.json({ mensagem: "Livro atualizado com sucesso." });
     } catch (error) {
@@ -87,7 +80,12 @@ export class LivroController {
   deletar = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
-      await this.livroService.deletar(id);
+      const sucesso = await this.livroService.deletar(id);
+
+      if (!sucesso) {
+        throw new AppError(404, "Livro não encontrado.");
+      }
+
       res.json({ mensagem: "Livro deletado com sucesso." });
     } catch (error) {
       next(error);
