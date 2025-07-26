@@ -179,8 +179,3 @@ POST /livros
 - Sistema operacional com suporte a SQLite (Windows, Linux, Mac)
 
 ---
-
-## 📨 Contato
-
-Dúvidas, sugestões ou feedbacks?
-📧 [gabriel.santos@gestmais.com.br](mailto:gabriel.santos@gestmais.com.br)
