@@ -1,3 +1,4 @@
+import { logger } from "@/utils/logger";
 import sqlite3 from "sqlite3";
 
 // Habilita modo verbose para debug
@@ -6,9 +7,9 @@ sqlite3.verbose();
 // Cria a conexão (ou cria o banco se não existir)
 export const db = new sqlite3.Database("banco.sqlite", (err) => {
   if (err) {
-    console.error("Erro ao conectar no SQLite:", err.message);
+    logger.info({ msg: `Erro ao conectar no SQLite: ${err.message}` });
   } else {
-    console.log("Conectado ao banco SQLite.");
+    logger.info({ msg: "Conectado ao banco SQLite." });
     criarTabelas(); // 👈 chama a função após conectar
   }
 });
@@ -32,6 +33,6 @@ function criarTabelas() {
       )
     `);
 
-    console.log("Tabelas verificadas/criadas.");
+    logger.info({ msg: "Tabelas verificadas/criadas." });
   });
 }

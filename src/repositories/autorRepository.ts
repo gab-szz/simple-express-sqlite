@@ -1,4 +1,4 @@
-import { db } from "@/lib/sqlite/db";
+import { db } from "@/config/sqlite";
 import { IAutorRepository } from "./autorRepositoryInterface";
 import { IAutor } from "@/types/autor";
 

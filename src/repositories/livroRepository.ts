@@ -1,6 +1,6 @@
 import { ILivro } from "@/types/livro";
 import { ILivroRepository } from "./livroRepositoryInterface";
-import { db } from "@/lib/sqlite/db";
+import { db } from "@/config/sqlite";
 
 export class LivroRepositorySQLite implements ILivroRepository {
   async criar(livro: ILivro): Promise<number> {

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "@/errors/AppError";
+import { logger } from "@/utils/logger";
 
 export function errorHandler(
   err: unknown,
@@ -8,9 +9,15 @@ export function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
-  console.error("Erro:", err);
+  logger.error({
+    msg: "Erro capturado pelo middleware",
+    path: req.originalUrl,
+    method: req.method,
+    stack: err instanceof Error ? err.stack : undefined,
+    error: err,
+  });
 
-  // Verifica se o erro é uma instância da sua classe personalizada
+  // Erro personalizado
   if (err instanceof AppError) {
     return res
       .status(err.status)
@@ -18,7 +25,7 @@ export function errorHandler(
       .json({ erro: err.message });
   }
 
-  // Tratamento de erros do SQLite
+  // Erro SQLite
   if (err instanceof Error && "code" in err) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sqliteError = err as any;
@@ -30,12 +37,12 @@ export function errorHandler(
     }
   }
 
-  // Se for um erro genérico do JS
+  // Erro genérico
   if (err instanceof Error) {
     return res.status(500).type("application/json").json({ erro: err.message });
   }
 
-  // Fallback se o erro não tiver formato conhecido
+  // Fallback
   return res
     .status(500)
     .type("application/json")

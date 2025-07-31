@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import app from "@/app";
-import { db } from "@/lib/sqlite/db";
+import { db } from "@/config/db";
 
 describe("Rotas de Autor - Integração", () => {
   // Limpa a tabela antes de cada teste
